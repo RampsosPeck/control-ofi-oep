@@ -21,6 +21,7 @@ class CreateHorariosTable extends Migration
             $table->time('salidam')->nullable();
             $table->time('ingresot')->nullable();
             $table->time('salidat');
+            $table->boolean('estado')->nullable();
             $table->timestamps();
         });
     }

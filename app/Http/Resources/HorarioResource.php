@@ -22,6 +22,7 @@ class HorarioResource extends JsonResource
             'salidam'  => $this->salidam,
             'ingresot'  => $this->ingresot,
             'salidat'  => $this->salidat,
+            'estado'  => $this->estado,
         ];
     }
 }

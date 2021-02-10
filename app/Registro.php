@@ -11,6 +11,8 @@ class Registro extends Model
         'user_id','fecha','horario_id','llegadam','retirom','llegadat','retirot','atraso'
     ];
 
+    //protected $dates = ['llegadam','retirom','llegadat','retirot'];
+
     public function User()
     {
         return $this->belongsTo(User::class);

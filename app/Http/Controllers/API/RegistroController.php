@@ -41,16 +41,45 @@ class RegistroController extends Controller
      */
     public function store(Request $request)
     {
-        //return 'esto es '.$request['hora'];
-        //return $request;
-        Registro::create([
-            'user_id' => $request['userid'],
-            //'fecha'   => $request['fecha'],
-            'fecha'   => '2021-02-09',
-            'horario_id' => 1,
-            'retirot'=> Carbon::parse($request['hora']),
-            'atraso'  => $request['atraso'],
-        ]);
+        return $request;
+        //Carbon::parse($request['hora'])
+        if ($request['hora'] <= '10:00:00')
+        {
+            Registro::create([
+                'user_id'    => $request['userid'],
+                'fecha'      => Carbon::parse($request['fecha']),
+                'horario_id' => 1,
+                'llegadam'   => Carbon::createFromTimestampMs($request['hora'], 'America/La_Paz'),
+                'atraso'     => $request['atraso'],
+            ]);
+        } elseif ($request['hora'] <= '13:00:00') {
+            Registro::create([
+                'user_id'    => $request['userid'],
+                'fecha'      => Carbon::parse($request['fecha']),
+                'horario_id' => 1,
+                'retirom'    => strval($request['hora']),
+                'atraso'     => $request['atraso'],
+            ]);
+        } else {
+            if ($request['hora'] <= '16:00:00'){
+                Registro::create([
+                    'user_id'    => $request['userid'],
+                    'fecha'      => Carbon::parse($request['fecha']),
+                    'horario_id' => 1,
+                    'llegadat'   => Carbon::parse($request['hora']),
+                    'atraso'     => $request['atraso'],
+                ]);
+            }else{
+                Registro::create([
+                    'user_id'    => $request['userid'],
+                    'fecha'      => Carbon::parse($request['fecha']),
+                    'horario_id' => 1,
+                    //'retirot'    => $request['hora'],
+                    'retirot'    => Carbon::createFromTimestampMs($request['hora'], 'America/La_Paz'),
+                    'atraso'     => $request['atraso'],
+                ]);
+            }
+        }
 
         return response()->json(['message' => 'Registro exitoso!!!'], 200);
 

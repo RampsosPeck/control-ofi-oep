@@ -35,7 +35,8 @@ class HorarioController extends Controller
      */
     public function create()
     {
-        //
+        $horario = Horario::where('estado',true)->first();
+        return  new HorarioResource($horario);
     }
 
     /**
@@ -86,7 +87,13 @@ class HorarioController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $this->authorize('isAdmin');
+
+        Horario::where('id', $id)->update(['estado' => true]);
+        Horario::where('id','!=', $id)->update(['estado' => false]);
+
+        return  ['message' => 'El horario activado'];
     }
 
     /**
@@ -97,7 +104,7 @@ class HorarioController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**

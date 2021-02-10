@@ -29,3 +29,4 @@ Route::get('personas','API\UserController@personas');
 
 Route::apiResources(['cargo' => 'API\CargoController']);
 Route::apiResources(['horarios' => 'API\HorarioController']);
+Route::get('horactiva','API\HorarioController@create');

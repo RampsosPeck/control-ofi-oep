@@ -39,7 +39,13 @@
                             </a> /
                             <a href="#" @click="deleteHorario(horario.id)">
                                 <i class="fas fa-trash red"></i>
+                            </a>  /
+                            <a href="#" @click="activarHorario(horario.id)" v-if="!horario.estado">
+                                <i class="fas fa-check yellow"></i>
                             </a>
+                            <span v-else>
+                              <b class="green"> ACTIVO </b>
+                            </span>
                         </td>
                       </tr>
                     </tbody></table>
@@ -201,6 +207,38 @@
                                 swal.fire(
                                     'Failed!',
                                     'Revise algo salio mal.',
+                                    'warning'
+                                )
+                            })
+                        }
+
+                    })
+
+            },
+            activarHorario(id){
+                swal.fire({
+                      title: '¿Deseas activar este horario?',
+                      text: "¿Estás seguro?",
+                      type: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: '¡Sí, activar!'
+                    }).then((result) =>
+                    {
+                        if(result.value)
+                        {
+                            this.form.get('api/horarios/'+id).then(()=>{
+                                swal.fire(
+                                    'Excelente!',
+                                    'El horario fue activado.',
+                                    'success'
+                                )
+                                Fire.$emit('AfterCreate');
+                            }).catch(()=>{
+                                swal.fire(
+                                    'Ooops... Algo salio mal!',
+                                    'Vuelva a intertarlo.',
                                     'warning'
                                 )
                             })

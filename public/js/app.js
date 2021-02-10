@@ -2308,6 +2308,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2375,18 +2381,40 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    loadHorario: function loadHorario() {
+    activarHorario: function activarHorario(id) {
       var _this3 = this;
+
+      swal.fire({
+        title: '¿Deseas activar este horario?',
+        text: "¿Estás seguro?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, activar!'
+      }).then(function (result) {
+        if (result.value) {
+          _this3.form.get('api/horarios/' + id).then(function () {
+            swal.fire('Excelente!', 'El horario fue activado.', 'success');
+            Fire.$emit('AfterCreate');
+          }).catch(function () {
+            swal.fire('Ooops... Algo salio mal!', 'Vuelva a intertarlo.', 'warning');
+          });
+        }
+      });
+    },
+    loadHorario: function loadHorario() {
+      var _this4 = this;
 
       if (this.$gate.isAdminOrAuthor()) {
         axios.get("api/horarios").then(function (_ref) {
           var data = _ref.data;
-          return _this3.horarios = data;
+          return _this4.horarios = data;
         });
       }
     },
     createHorario: function createHorario() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$Progress.start();
       this.form.post('api/horarios').then(function (result) {
@@ -2401,20 +2429,20 @@ __webpack_require__.r(__webpack_exports__);
           timer: 2000
         });
 
-        _this4.$Progress.finish();
+        _this5.$Progress.finish();
       }).catch(function () {
         swal.fire('Oops...!', 'Algo salió mal.', 'warning');
 
-        _this4.$Progress.fail();
+        _this5.$Progress.fail();
       });
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this6 = this;
 
     this.loadHorario();
     Fire.$on('AfterCreate', function () {
-      _this5.loadHorario();
+      _this6.loadHorario();
     });
   }
 });
@@ -3030,6 +3058,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3081,27 +3111,62 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       muestra: [],
       mensaje: 'Escanee el QR',
       name: '',
+      //nombre del que esta marcando
       cargo: '',
+      //cargo del que esta marcando
       existe: false,
+      //si existe o no el usuario en la BD
       momento: '',
+      //la hora al instante
       fechahoy: '',
+      //saca la fecha de hoy
       personal: {},
+      //personal que va a marcar el qr
+      horario: '',
+      //con que horario va a sacar su atraso
+      retraso: '',
+      //que tanto es su retraso
       form: new Form({
         userid: '',
+        //usuario id
         userci: '',
+        //cedula del usuario
         fecha: '',
+        //fecha en que esta marcando
         hora: '',
-        atraso: ''
+        //hora en que esta marcando
+        atraso: '',
+        //el atraso para que vaya a sumar
+        marca: '',
+        //Mmaniana, mediodia, tarde, noche
+        horarioid: '' //que horario estamos usando (horario continuo)
+
       })
     };
   },
   methods: {
+    onAtraso: function onAtraso(momento1, ingreso2) {
+      var hora1 = momento1.split(":"),
+          hora2 = ingreso2.split(":"),
+          t1 = new Date(),
+          t2 = new Date();
+      t1.setHours(hora1[0], hora1[1], hora1[2]);
+      t2.setHours(hora2[0], hora2[1], hora2[2]); //Aquí hago la resta
+
+      t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds()); //Imprimo el resultado
+
+      this.form.atraso = (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : " hora") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : " segundo") : "");
+    },
     onDecode: function onDecode(decodedString) {
       var _this = this;
 
@@ -3117,39 +3182,92 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           /*aqui validar si tiene o no tiene atraso*/
 
 
+          if (_this.momento <= '10:00:00') {
+            if (_this.momento > _this.horario.ingresom) {
+              _this.form.atraso = onAtraso(_this.momento, _this.horario.ingresom);
+              console.log(_this.form.atraso);
+            } else {
+              _this.form.atraso = '00:00:00';
+            }
+
+            _this.form.marca = 'maniana';
+          } else if (_this.momento <= '13:00:00') {
+            if (_this.momento < _this.horario.salidam) {
+              _this.existe = false;
+              return swal.fire({
+                type: 'error',
+                title: 'Aún falta para la hora de salida!',
+                text: "Lo estamos grabando",
+                showConfirmButton: false,
+                timer: 2500
+              });
+            }
+
+            _this.form.atraso = '00:00:00';
+            _this.form.marca = 'mediodia';
+          } else {
+            if (_this.momento <= '16:00:00') {
+              _this.marca = 'tarde';
+
+              if (_this.momento > _this.horario.ingresot) {
+                _this.form.atraso = onAtraso(_this.momento, _this.horario.ingresom);
+                console.log(_this.form.atraso);
+              } else {
+                _this.form.atraso = '00:00:00';
+              }
+            } else {
+              if (_this.momento < _this.horario.salidat) {
+                _this.existe = false;
+                return swal.fire({
+                  type: 'error',
+                  title: 'Aún falta para la hora de salida!',
+                  text: "Lo estamos grabando",
+                  showConfirmButton: false,
+                  timer: 2500
+                });
+              }
+
+              _this.form.atraso = '00:00:00';
+              _this.form.marca = 'noche';
+            }
+          }
+          /*Hasta aqui para sacar retraso*/
+
+
           _this.form.userid = data.id;
           _this.form.userci = data.cedula;
           _this.form.fecha = _this.fechahoy;
-          _this.form.hora = _this.momento;
-          _this.form.atraso = 0;
-          _this.form.name = data.name;
-          _this.form.cargo = data.cargo;
+          _this.form.hora = _this.momento; //this.form.atraso = 0;
+
+          _this.name = data.name;
+          _this.cargo = data.cargo;
         }
       }); // Si existe entonces
 
       if (this.existe) {
+        this.form.horarioid = this.horario.id;
         this.form.post('api/registro').then(function (result) {
           swal.fire({
             type: 'success',
             //title: `<b>${result.data.message}</b>`,
-            title: 'Hola ' + _this.form.name,
+            title: 'Hola ' + _this.name,
             text: "Bienvenido al TED - Potosí!",
             showConfirmButton: false,
             timer: 2500
           });
 
           _this.muestra.push({
-            nombre: _this.form.name,
-            cargo: _this.form.cargo,
+            nombre: _this.name,
+            cargo: _this.cargo,
             hora: _this.momento,
-            atraso: '00:00:00'
+            atraso: _this.form.atraso
           });
 
           _this.$Progress.finish();
         }).catch(function () {
           swal.fire({
             type: 'error',
-            title: 'Oops!!! ' + _this.form.name + ' algo salió mal!',
+            title: 'Oops!!! ' + _this.name + ' algo salió mal!',
             text: "Vuelve a intentarlo por favor.",
             showConfirmButton: false,
             timer: 2500
@@ -3175,6 +3293,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         axios.get("api/user").then(function (_ref) {
           var data = _ref.data;
           return _this2.personal = data.data;
+        });
+        axios.get("api/horactiva").then(function (_ref2) {
+          var data = _ref2.data;
+          return _this2.horario = data.data;
         });
       }
     },
@@ -64403,7 +64525,32 @@ var render = function() {
                                     }
                                   },
                                   [_c("i", { staticClass: "fas fa-trash red" })]
-                                )
+                                ),
+                                _vm._v("  /\n                            "),
+                                !horario.estado
+                                  ? _c(
+                                      "a",
+                                      {
+                                        attrs: { href: "#" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.activarHorario(
+                                              horario.id
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-check yellow"
+                                        })
+                                      ]
+                                    )
+                                  : _c("span", [
+                                      _c("b", { staticClass: "green" }, [
+                                        _vm._v(" ACTIVO ")
+                                      ])
+                                    ])
                               ])
                             ])
                           })
@@ -95043,6 +95190,11 @@ Vue.filter('upText', function (text) {
 });
 Vue.filter('myDate', function (created) {
   return moment__WEBPACK_IMPORTED_MODULE_0___default()(created).locale("es").format('MMMM Do YYYY');
+});
+Vue.filter('myDiff', function (start, end) {
+  var uno = moment__WEBPACK_IMPORTED_MODULE_0___default()(start).locale("es");
+  var dos = moment__WEBPACK_IMPORTED_MODULE_0___default()(end).locale("es");
+  return dos.diff(uno, 'H:mm:ss');
 });
 window.Fire = new Vue();
 /**

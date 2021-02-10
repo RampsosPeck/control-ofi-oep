@@ -91,6 +91,12 @@ Vue.filter('myDate', function(created){
 	return moment(created).locale("es").format('MMMM Do YYYY');
 });
 
+Vue.filter('myDiff', function(start, end){
+  var uno = moment(start).locale("es");
+  var dos = moment(end).locale("es");
+  return dos.diff(uno,'H:mm:ss');
+});
+
 
 window.Fire = new Vue();
 
