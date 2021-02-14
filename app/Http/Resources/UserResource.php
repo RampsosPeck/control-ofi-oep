@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\CargoResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -23,7 +24,8 @@ class UserResource extends JsonResource
             'type' => $this->type,
             'cargo' => $this->cargo,
             'bio' => $this->bio,
-            'photo' => $this->photo
+            'photo' => $this->photo,
+            'cargo' => new CargoResource($this->cargo),
         ];
     }
 }

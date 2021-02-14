@@ -40,6 +40,9 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
+
 /*QR IMPORT GLOBAL*/
 //import Vue from "vue";
 import VueQrcodeReader from "vue-qrcode-reader";
@@ -89,12 +92,6 @@ Vue.filter('upText', function(text){
 
 Vue.filter('myDate', function(created){
 	return moment(created).locale("es").format('MMMM Do YYYY');
-});
-
-Vue.filter('myDiff', function(start, end){
-  var uno = moment(start).locale("es");
-  var dos = moment(end).locale("es");
-  return dos.diff(uno,'H:mm:ss');
 });
 
 

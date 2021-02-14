@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','cedula','telefono', 'email', 'password', 'bio','photo','type','cargo'
+        'name','cedula','telefono', 'email', 'password', 'bio','photo','type','cargo_id'
     ];
 
     /**
@@ -44,4 +44,7 @@ class User extends Authenticatable
         return $this->hasMany(Registro::class);
     }
 
+    public function cargo(){
+        return $this->belongsTo(Cargo::class);
+    }
 }

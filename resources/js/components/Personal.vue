@@ -31,7 +31,7 @@
                         </td>
                         <td v-text="user.cedula"></td>
                         <td v-text="user.bio"></td>
-                        <td class="text-center">{{ user.cargo | upText }}</td>
+                        <td class="text-center">{{ user.cargo.nombre | upText }}</td>
                         <td class="text-center"> {{ user.created_at | myDate }}</td>
                         <td class="text-center ">
                             <a href="#" @click="editModal(user)" class="btn btn-sm btn-outline-info">
@@ -103,14 +103,12 @@
             <div class="form-group row">
                 <label for="name" class="col-sm-4 col-form-label">Cargo a ocupar:</label>
                 <div class="col-sm-8">
-                  <select name="cargo" v-model="form.cargo" id="cargo" class="form-control" :class="{'is-invalid': form.errors.has('cargo') }">
-                    <option value="">Cargo del Usuario</option>
-                    <option value="tecnico">Soporte Técnico</option>
-                    <option value="supervisor">Supervisor</option>
-                    <option value="digitalizador">Digitalizador</option>
-                    <option value="maletero">Maletero</option>
-                  </select>
-                  <has-error :form="form" field="cargo"></has-error>
+                    <select v-model="form.cargo_id">
+                      <option v-for="cargo in cargos" v-bind:value="cargo.id" >
+                        {{ cargo.nombre }}
+                      </option>
+                    </select>
+                    <has-error :form="form" field="form.cargo_id"></has-error>
                 </div>
             </div>
       </div>
@@ -133,13 +131,14 @@
             return {
                 editmode : false,
                 users : {},
+                cargos : {},
                 form: new Form({
                     id:'',
                     name: '',
                     cedula: '',
                     telefono: '',
                     email: '',
-                    cargo: '',
+                    cargo_id: '',
                     type: '',
                     bio: '',
                     photo: ''
@@ -189,6 +188,7 @@
             loadUsers(){
                 if(this.$gate.isAdminOrAuthor()){
                   axios.get('api/personas').then(({data}) => (this.users = data));
+                  axios.get("api/cargo").then(({data}) => (this.cargos = data.data));
                 }
             },
             createUser(){

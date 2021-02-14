@@ -1,3 +1,6 @@
+
+
+
 <template>
   <div>
     <div class="row justify-content-center mt-5">
@@ -31,7 +34,7 @@
                 <tr v-for="(item, index) of muestra">
                   <td scope="row">{{ index+1 }}</td>
                   <td>{{ item.nombre }}</td>
-                  <td>{{ item.cargo }}</td>
+                  <td>{{ item.cargo.nombre }}</td>
                   <td>{{ item.hora }}</td>
                   <td>{{ item.atraso }}</td>
                 </tr>
@@ -51,15 +54,15 @@ import moment from 'moment';
                 muestra : [],
                 mensaje: 'Escanee el QR',
 
-                name:'',
-                cargo:'',
+                name:'', //nombre del que esta marcando
+                cargo:'', //cargo del que esta marcando
 
-                existe: false,
-                momento: '',
-                fechahoy:'',
-                personal:{},
-                horario:'',
-                retraso:'',
+                existe: false, //si existe o no el usuario en la BD
+                momento: '', //la hora al instante
+                fechahoy:'', //saca la fecha de hoy
+                personal:{}, //personal que va a marcar el qr
+                horario:'', //con que horario va a sacar su atraso
+                retraso:'', //que tanto es su retraso
                 form: new Form({
                     userid: '', //usuario id
                     userci: '', //cedula del usuario
@@ -71,29 +74,8 @@ import moment from 'moment';
                 })
             }
         },
-        /*computed:{
-            calcularAtraso: function(momento1, ingreso2) {
-                //console.log(this.momento);
-                //console.log(this.horario.ingresom);
-                var hora1 = (momento1).split(":"),
-                hora2 = (ingreso2).split(":"),
-                    t1 = new Date(),
-                    t2 = new Date();
-
-                t1.setHours(hora1[0], hora1[1], hora1[2]);
-                t2.setHours(hora2[0], hora2[1], hora2[2]);
-
-                //Aquí hago la resta
-                t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
-
-                //Imprimo el resultado
-                return  (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : " hora") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : " segundo") : "");
-                    /*document.body.innerHTML = "La diferencia es de: " + (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? " horas" : " hora") : "") + (t1.getMinutes() ? ", " + t1.getMinutes() + (t1.getMinutes() > 1 ? " minutos" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? " y " : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? " segundos" : " segundo") : "");*/
-            /*}
-        },*/
-
         methods:{
-            onAtraso(momento1, ingreso2) {
+            onAtraso: function(momento1, ingreso2) {
                 var hora1 = (momento1).split(":"),
                 hora2 = (ingreso2).split(":"),
                     t1 = new Date(),
@@ -106,7 +88,7 @@ import moment from 'moment';
                 t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
 
                 //Imprimo el resultado
-                this.form.atraso =  (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : " hora") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : " segundo") : "");
+                return (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : " hora") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : " segundo") : "");
             },
             onDecode (decodedString) {
             //console.log(decodedString)
@@ -114,74 +96,90 @@ import moment from 'moment';
                 this.personal.map((data)=>{
                     if(data.cedula == parseInt(decodedString))
                     {
-                      this.existe = true;
-
-                      let hoy = new Date();
-                      this.momento = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-
-                      this.$Progress.start();
-
-                      /*aqui validar si tiene o no tiene atraso*/
-                      if (this.momento <= '10:00:00') {
-                          if(this.momento > this.horario.ingresom){
-                            this.form.atraso = onAtraso(this.momento, this.horario.ingresom);
-                            console.log(this.form.atraso);
-                          }else{
-                            this.form.atraso = '00:00:00';
-                          }
-                          this.marca = 'maniana';
-                      } else if (this.momento  <= '13:00:00') {
-                          if(this.momento < this.horario.salidam){
-                              this.existe = false;
-                              swal.fire({
-                                type:  'error',
-                                title: 'Aún falta para la hora de salida!',
-                                text: "Lo estamos grabando",
-                                showConfirmButton: false,
-                                timer: 2500
-                              });
-                          }
-                          this.marca = 'mediodia';
-                      } else {
-                          if(this.momento  <= '16:00:00'){
-                              this.marca = 'tarde';
-                              if(this.momento > this.horario.ingresot){
-                                  this.form.atraso = onAtraso(this.momento, this.horario.ingresom);
-                                  console.log(this.form.atraso);
-                              }else{
-                                  this.form.atraso = '00:00:00';
-                              }
-                          }else{
-                              if(this.momento < this.horario.salidat){
-                                  this.existe = false;
-                                  swal.fire({
-                                    type:  'error',
-                                    title: 'Aún falta para la hora de salida!',
-                                    text: "Lo estamos grabando",
-                                    showConfirmButton: false,
-                                    timer: 2500
-                                  });
-                              }else{
-                                  this.marca = 'noche';
-                                  this.existe = true;
-                              }
-
-                          }
-                      }
-                      /*Hasta aqui para sacar retraso*/
-
-                      this.form.userid = data.id;
-                      this.form.userci = data.cedula;
-                      this.form.fecha = this.fechahoy;
-                      this.form.hora = this.momento;
-                      //this.form.atraso = 0;
-
-                      this.name = data.name;
-                      this.cargo = data.cargo;
+                        this.existe = true;
+                        this.form.userid = data.id;
+                        this.form.userci = data.cedula;
+                        this.name = data.name;
+                        this.cargo = data.cargo;
                     }
-                })
-                // Si existe entonces
+                });
+
                 if(this.existe)
+                {
+
+                    let hoy = new Date();
+                    this.momento = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
+
+                    if (this.momento <= '10:00:00')
+                    {
+                        if(this.momento > this.horario.ingresom){
+                            this.form.atraso = this.onAtraso(this.momento, this.horario.ingresom);
+                        }else{
+                            this.form.atraso = '00:00:00';
+                        }
+                        this.form.marca = 'maniana';
+                    }else{
+                        if (this.momento <= '12:00:00') {
+                            return swal.fire({
+                              type:  'error',
+                              title: 'Oops!!! '+this.name+' aún no es hora!',
+                              text: "Se le tomará como abandono.",
+                              showConfirmButton: false,
+                              timer: 2500
+                            });
+                        }else{
+                            this.form.marca = 'mediodia';
+                        }
+                    }
+
+                    if (this.momento <= '16:00:00')
+                    {
+                        if(this.momento > this.horario.ingresot){
+                            this.form.atraso = this.onAtraso(this.momento, this.horario.ingresot);
+                        }else{
+                            this.form.atraso = '00:00:00';
+                        }
+                        this.form.marca = 'tarde';
+                    }else{
+                        if (this.momento <= '12:00:00') {
+                            return swal.fire({
+                              type:  'error',
+                              title: 'Oops!!! '+this.name+' aún no es hora!',
+                              text: "Se le tomará como abandono.",
+                              showConfirmButton: false,
+                              timer: 2500
+                            });
+                        }else{
+                            this.form.marca = 'mediodia';
+                        }
+                    }
+                    //console.log(this.form.atraso );
+
+                    this.muestra.push({
+                        nombre: this.name,
+                        cargo: this.cargo,
+                        hora: this.momento,
+                        atraso: this.form.atraso
+                    });
+                    swal.fire({
+                        type:  'success',
+                        title: 'Hola '+this.name,
+                        text: "Bienvenido al TED - Potosí!",
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                }
+
+                if (this.momento <= '10:00:00')
+                {
+                  console.log('no');
+                }else{
+                  console.log('si');
+                }
+
+
+                // Si existe entonces
+                /*if(this.existe)
                 {
                     this.form.horarioid = this.horario.id;
                     this.form.post('api/registro')
@@ -215,29 +213,14 @@ import moment from 'moment';
                     });
                     this.existe = false;
                 }else{
-                  //console.log(this.horario.ingresom);
-                    /*if (this.momento >= this.horario.ingresom) {
-                      console.log('si')
-                    }else{ console.log('no')}*/
-
-                    /*if (this.momento >= '10:00:00') {
-                          console.log('si es menor a 13:00')
-                      }else{
-                        console.log('no es menor')
-                      }*/
-
-                      /*if (this.momento >= this.horario.ingresom) {
-                      console.log('si')
-                    }else{ console.log('no')}*/
-
                     swal.fire({
                       type:  'error',
                       title: 'Código QR invalido!',
-                      text: "Lo estamos grabando",
+                      text: "Lo estamos grabando ultimooooo",
                       showConfirmButton: false,
                       timer: 2500
                     });
-                }
+                }*/
             },
 
             loadPersonal(){
@@ -280,3 +263,26 @@ import moment from 'moment';
         }
     }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

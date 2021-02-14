@@ -28,7 +28,7 @@
                       <tr v-for="(horario, key, index)  in horarios.data" :key="horario.id" >
                         <td v-text="horario.id"></td>
                         <td v-text="horario.nombre"></td>
-                        <td class="text-center"> {{ horario.created_at | myDate }}</td>
+                        <td class="text-center"> {{ horario.fecha | myDate }}</td>
                         <td v-text="horario.ingresom"></td>
                         <td v-text="horario.salidam"></td>
                         <td v-text="horario.ingresot"></td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Horario;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\HorarioResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HorarioController extends Controller
@@ -116,19 +117,33 @@ class HorarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-
         $horario = Horario::findOrFail($id);
 
-        $this->validate($request,[
-            'nombre' => ['required'],
-            'fecha' => ['required'],
-            'ingresom' => 'required',
-            'salidam' => 'required',
-            'ingresot' => 'required',
-            'salidat' => 'required',
-        ]);
-        $horario->update($request->all());
+        if($request['nombre'] === 'Continuo')
+        {
+            $this->validate($request,[
+                'nombre'   => ['required'],
+                'fecha'    => 'date_format:Y-m-d',
+                'ingresom' => 'required',
+                'salidat'  => 'required',
+            ]);
+        }else{
+            $this->validate($request,[
+                'nombre'   => ['required'],
+                'ingresom' => 'required',
+                'salidam'  => 'required',
+                'ingresot' => 'required',
+                'salidat'  => 'required',
+            ]);
+        }
+        //$horario->update($request->all());
+        $horario->nombre = $request['nombre'];
+        $horario->fecha = Carbon::parse($request['fecha']);
+        $horario->ingresom = $request['ingresom'];
+        $horario->salidam = $request['salidam'];
+        $horario->ingresot = $request['ingresot'];
+        $horario->salidat = $request['salidat'];
+        $horario->save();
 
         return ['message' => 'Se actualizó el horario!'];
 

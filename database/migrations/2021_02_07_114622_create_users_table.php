@@ -22,7 +22,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('type')->default('user');
-            $table->string('cargo')->nullable();
+            $table->unsignedBigInteger('cargo_id');
+            $table->foreign('cargo_id')->references('id')->on('cargos');
             $table->mediumText('bio')->nullable();
             $table->text('photo')->nullable();
             $table->rememberToken();

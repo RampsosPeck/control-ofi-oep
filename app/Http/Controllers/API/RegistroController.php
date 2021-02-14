@@ -41,9 +41,18 @@ class RegistroController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        //return $request->all();
+
+        Registro::create([
+            'user_id'    => $request['userid'],
+            'fecha'      => Carbon::parse($request['fecha']),
+            'horario_id' => $request['horarioid'],
+            'llegadam'   => Carbon::createFromTimestampMs($request['hora'], 'America/La_Paz'),
+            'atraso'     => $request['atraso'],
+        ]);
+
         //Carbon::parse($request['hora'])
-        if ($request['hora'] <= '10:00:00')
+        /*if ($request['hora'] <= '10:00:00')
         {
             Registro::create([
                 'user_id'    => $request['userid'],
@@ -79,7 +88,7 @@ class RegistroController extends Controller
                     'atraso'     => $request['atraso'],
                 ]);
             }
-        }
+        }*/
 
         return response()->json(['message' => 'Registro exitoso!!!'], 200);
 

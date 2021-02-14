@@ -57,7 +57,7 @@ class UserController extends Controller
             'name' => 'required|string|max:191',
             'cedula' => ['required','unique:users,cedula'],
             'telefono' => ['required','numeric','digits:8','unique:users,telefono'],
-            'cargo' => 'required|string|max:30',
+            'cargo_id' => 'required',
         ]);
 
         //return ['message' => 'I have your data'];
@@ -68,7 +68,7 @@ class UserController extends Controller
             'email' => $request['email'],
             'type' => 'user',
             'bio' => $request['bio'],
-            'cargo' => $request['cargo'],
+            'cargo_id' => $request['cargo_id'],
             //'password' => Hash::make($request['celular']),
         ]);
 

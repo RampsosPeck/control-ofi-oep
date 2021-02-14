@@ -17,7 +17,7 @@ class HorarioResource extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->nombre,
-            'fecha'  => $this->fecha->diffForHumans(),
+            'fecha'  => $this->fecha,
             'ingresom'  => $this->ingresom,
             'salidam'  => $this->salidam,
             'ingresot'  => $this->ingresot,

@@ -24,7 +24,7 @@
                       <tr v-for="(cargo, key, index)  in cargos.data" :key="cargo.id" >
                         <td v-text="cargo.id"></td>
                         <td v-text="cargo.nombre"></td>
-                        <td class="text-center"> {{ cargo.created_at | myDate }}</td>
+                        <td class="text-center"> {{ cargo.fecha | myDate }}</td>
                         <td class="text-center">
                             <a href="#" @click="editModal(cargo)">
                                 <i class="fas fa-edit blue"></i>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Cargo;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CargoResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CargoController extends Controller
@@ -91,14 +92,15 @@ class CargoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cargo = Cargo::findOrFail($id);
 
         $this->validate($request, [
             'nombre' => 'required|string|max:191',
-            'fecha' => ['required'],
         ]);
-
-        $cargo->update($request->all());
+        //return $request->all();
+        $cargo = Cargo::find($id);
+        $cargo->nombre = $request['nombre'];
+        $cargo->fecha = Carbon::parse($request['fecha']);
+        $cargo->save();
 
         return ['message' => 'Se actualizó el cargo'];
     }
