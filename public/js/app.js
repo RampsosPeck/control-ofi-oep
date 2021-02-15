@@ -3114,12 +3114,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       muestra: [],
-      mensaje: 'Escanee el QR',
+      mensaje: 'Escanea el código QR de tu intransferible!',
+      classsms: 'bg-success',
       name: '',
       //nombre del que esta marcando
       cargo: '',
@@ -3165,7 +3167,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds()); //Imprimo el resultado
 
-      return (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : " hora") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : " segundo") : "");
+      return (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : ":") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : ":") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : "") : "");
     },
     onDecode: function onDecode(decodedString) {
       var _this = this;
@@ -3180,6 +3182,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this.cargo = data.cargo;
         }
       });
+      this.$Progress.start();
 
       if (this.existe) {
         var hoy = new Date();
@@ -3194,7 +3197,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
           this.form.marca = 'maniana';
         } else {
-          if (this.momento <= '12:00:00') {
+          if (this.momento <= this.horario.salidam) {
             return swal.fire({
               type: 'error',
               title: 'Oops!!! ' + this.name + ' aún no es hora!',
@@ -3202,8 +3205,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               showConfirmButton: false,
               timer: 3000
             });
+            this.existe = false;
           } else {
             this.form.marca = 'mediodia';
+            this.form.atraso = '00:00:00';
           }
         }
 
@@ -3216,7 +3221,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
           this.form.marca = 'tarde';
         } else {
-          if (this.momento <= '18:00:00') {
+          if (this.momento <= this.horario.salidat) {
             return swal.fire({
               type: 'error',
               title: 'Oops!!! ' + this.name + ' aún no es hora!',
@@ -3224,6 +3229,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               showConfirmButton: false,
               timer: 3000
             });
+            this.existe = false;
           } else {
             this.form.marca = 'noche';
             this.form.atraso = '00:00:00';
@@ -3241,37 +3247,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             atraso: _this.form.atraso
           });
 
-          return swal.fire({
+          swal.fire({
             type: 'success',
-            //title: `<b>${result.data.message}</b>`,
-            title: 'Hola ' + _this.name,
-            text: "Bienvenido al TED - Potosí!",
+            title: 'Hola ' + _this.name + ' bienvenido al TED - Potosí!',
+            text: "".concat(result.data.message),
             showConfirmButton: false,
             timer: 3000
           });
+          _this.mensaje = result.data.message;
+          _this.classsms = 'bg-success';
+          setTimeout(function () {
+            _this.mensaje = 'Escanea el código QR de tu intransferible!';
+            _this.classsms = 'sidebar-dark-primary text-white';
+          }, 5000);
+          _this.existe = false;
 
           _this.$Progress.finish();
-        }).catch(function () {
-          return swal.fire({
+        }).catch(function (error) {
+          swal.fire({
             type: 'error',
-            title: 'Oops!!! ' + _this.name + ' algo salió mal!',
-            text: "Vuelve a intentarlo por favor.",
+            title: "".concat(error.response.data.message),
+            text: 'Oops!!! volviste a marcar',
             showConfirmButton: false,
             timer: 3000
           });
+          _this.mensaje = error.response.data.message;
+          _this.classsms = 'bg-danger';
+          setTimeout(function () {
+            _this.mensaje = 'Escanea el código QR de tu intransferible!';
+            _this.classsms = 'sidebar-dark-primary text-white';
+          }, 5000);
+          _this.existe = false;
 
           _this.$Progress.fail();
         });
-        this.existe = false;
       } else {
-        return swal.fire({
-          type: 'error',
+        this.mensaje = 'Oops!!! Código QR invalido!';
+        this.classsms = 'bg-danger';
+        setTimeout(function () {
+          _this.mensaje = 'Escanea el código QR de tu intransferible!';
+          _this.classsms = 'sidebar-dark-primary text-white';
+        }, 5000);
+        /*return swal.fire({
+          type:  'error',
           title: 'Oops!!! Código QR invalido!',
-          text: "Lo estamos grabando.",
+          text:  "Lo estamos grabando.",
           showConfirmButton: false,
           timer: 3000
-        });
+        });*/
+
+        this.$Progress.fail();
       }
+
+      this.$Progress.finish();
     },
     loadPersonal: function loadPersonal() {
       var _this2 = this;
@@ -66795,23 +66823,25 @@ var render = function() {
           "div",
           { staticClass: "card text-center", staticStyle: { width: "18rem" } },
           [
-            _c("qrcode-stream", {
-              on: { decode: _vm.onDecode, init: _vm.onInit }
-            }),
+            _vm._m(0),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("h5", { staticClass: "card-title" }, [_vm._v("QR SCANNER")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "card-text" }, [
-                _vm._v(
-                  "\n             " + _vm._s(_vm.mensaje) + "\n            "
-                )
+            _c(
+              "div",
+              { staticClass: "card-body m-0 p-1 sidebar-dark-primary" },
+              [
+                _c("qrcode-stream", {
+                  on: { decode: _vm.onDecode, init: _vm.onInit }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-footer cyane" }, [
+              _c("p", { staticClass: "card-text", class: this.classsms }, [
+                _c("b", [_vm._v(_vm._s(_vm.mensaje))])
               ])
-            ]),
-            _vm._v(" "),
-            _vm._m(0)
-          ],
-          1
+            ])
+          ]
         )
       ]),
       _vm._v(" "),
@@ -66824,17 +66854,25 @@ var render = function() {
               "tbody",
               _vm._l(_vm.muestra, function(item, index) {
                 return _c("tr", [
-                  _c("td", { attrs: { scope: "row" } }, [
-                    _vm._v(_vm._s(index + 1))
-                  ]),
+                  _c(
+                    "td",
+                    { staticClass: "text-center", attrs: { scope: "row" } },
+                    [_vm._v(_vm._s(index + 1))]
+                  ),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(item.nombre))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.cargo.nombre))]),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(item.cargo.nombre))
+                  ]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.hora))]),
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(item.hora))
+                  ]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.atraso))])
+                  _c("td", { staticClass: "text-center" }, [
+                    _vm._v(_vm._s(item.atraso))
+                  ])
                 ])
               }),
               0
@@ -66850,27 +66888,35 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-body" }, [
-      _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-        _vm._v("Mas detalles ")
-      ])
+    return _c("div", { staticClass: "card-header cyane" }, [
+      _c("h5", [_c("b", [_vm._v("REGISTRO DE ASISTENCIA")])])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead-dark" }, [
+    return _c("thead", { staticClass: "sidebar-dark-primary text-white" }, [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nro.")]),
+        _c("th", { staticClass: "text-center", attrs: { scope: "col" } }, [
+          _vm._v("Nro.")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nombre")]),
+        _c("th", { staticClass: "text-center", attrs: { scope: "col" } }, [
+          _vm._v("Nombre")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cargo")]),
+        _c("th", { staticClass: "text-center", attrs: { scope: "col" } }, [
+          _vm._v("Cargo")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Hora")]),
+        _c("th", { staticClass: "text-center", attrs: { scope: "col" } }, [
+          _vm._v("Hora")
+        ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Atraso")])
+        _c("th", { staticClass: "text-center", attrs: { scope: "col" } }, [
+          _vm._v("Atraso")
+        ])
       ])
     ])
   }
@@ -95911,14 +95957,15 @@ component.options.__file = "resources/js/components/Reporte.vue"
 /*!*********************************************!*\
   !*** ./resources/js/components/Scanner.vue ***!
   \*********************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Scanner_vue_vue_type_template_id_7104f063___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Scanner.vue?vue&type=template&id=7104f063& */ "./resources/js/components/Scanner.vue?vue&type=template&id=7104f063&");
 /* harmony import */ var _Scanner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Scanner.vue?vue&type=script&lang=js& */ "./resources/js/components/Scanner.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Scanner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Scanner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -95948,7 +95995,7 @@ component.options.__file = "resources/js/components/Scanner.vue"
 /*!**********************************************************************!*\
   !*** ./resources/js/components/Scanner.vue?vue&type=script&lang=js& ***!
   \**********************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

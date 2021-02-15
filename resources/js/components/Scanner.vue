@@ -3,37 +3,38 @@
     <div class="row justify-content-center mt-5">
       <div class="col-md-4">
           <div class="card text-center"  style='width:18rem;'>
-             <qrcode-stream @decode="onDecode" @init="onInit" />
-            <div class="card-body">
-              <h5 class="card-title">QR SCANNER</h5>
-              <p class="card-text">
-               {{ mensaje }}
-              </p>
+            <div class="card-header cyane">
+                <h5><b>REGISTRO DE ASISTENCIA</b></h5>
             </div>
-            <div class="card-body">
-              <a href="#" class="card-link">Mas detalles </a>
+            <div class="card-body m-0 p-1 sidebar-dark-primary">
+                <qrcode-stream @decode="onDecode" @init="onInit" />
+            </div>
+            <div class="card-footer cyane">
+                <p class="card-text" :class="this.classsms">
+                    <b>{{ mensaje }}</b>
+                </p>
             </div>
           </div>
       </div>
       <div class="col-md-8">
         <div class="table-responsive">
            <table class="table">
-              <thead class="thead-dark">
+              <thead class="sidebar-dark-primary text-white">
                 <tr>
-                  <th scope="col">Nro.</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Cargo</th>
-                  <th scope="col">Hora</th>
-                  <th scope="col">Atraso</th>
+                  <th scope="col" class="text-center">Nro.</th>
+                  <th scope="col" class="text-center">Nombre</th>
+                  <th scope="col" class="text-center">Cargo</th>
+                  <th scope="col" class="text-center">Hora</th>
+                  <th scope="col" class="text-center">Atraso</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(item, index) of muestra">
-                  <td scope="row">{{ index+1 }}</td>
+                  <td scope="row" class="text-center">{{ index+1 }}</td>
                   <td>{{ item.nombre }}</td>
-                  <td>{{ item.cargo.nombre }}</td>
-                  <td>{{ item.hora }}</td>
-                  <td>{{ item.atraso }}</td>
+                  <td class="text-center">{{ item.cargo.nombre }}</td>
+                  <td class="text-center">{{ item.hora }}</td>
+                  <td class="text-center">{{ item.atraso }}</td>
                 </tr>
               </tbody>
             </table>
@@ -49,7 +50,8 @@ import moment from 'moment';
         data() {
             return {
                 muestra : [],
-                mensaje: 'Escanee el QR',
+                mensaje: 'Escanea el código QR de tu intransferible!',
+                classsms: 'bg-success',
 
                 name:'', //nombre del que esta marcando
                 cargo:'', //cargo del que esta marcando
@@ -85,7 +87,7 @@ import moment from 'moment';
                 t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
 
                 //Imprimo el resultado
-                return (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : " hora") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : " minuto") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : " segundo") : "");
+                return (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : ":") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : ":") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : "") : "");
             },
             onDecode (decodedString) {
             //console.log(decodedString)
@@ -100,6 +102,7 @@ import moment from 'moment';
                     }
                 });
 
+                this.$Progress.start();
                 if(this.existe)
                 {
                     let hoy = new Date();
@@ -114,7 +117,7 @@ import moment from 'moment';
                         }
                         this.form.marca = 'maniana';
                     }else{
-                        if (this.momento <= '12:00:00') {
+                        if (this.momento <= this.horario.salidam) {
                             return swal.fire({
                               type:  'error',
                               title: 'Oops!!! '+this.name+' aún no es hora!',
@@ -122,8 +125,10 @@ import moment from 'moment';
                               showConfirmButton: false,
                               timer: 3000
                             });
+                            this.existe = false;
                         }else{
                             this.form.marca = 'mediodia';
+                            this.form.atraso = '00:00:00';
                         }
                     }
 
@@ -136,7 +141,7 @@ import moment from 'moment';
                         }
                         this.form.marca = 'tarde';
                     }else{
-                        if (this.momento <= '18:00:00') {
+                        if (this.momento <= this.horario.salidat) {
                             return swal.fire({
                               type:  'error',
                               title: 'Oops!!! '+this.name+' aún no es hora!',
@@ -144,6 +149,7 @@ import moment from 'moment';
                               showConfirmButton: false,
                               timer: 3000
                             });
+                            this.existe = false;
                         }else{
                             this.form.marca = 'noche';
                             this.form.atraso = '00:00:00';
@@ -161,38 +167,57 @@ import moment from 'moment';
                             hora: this.momento,
                             atraso: this.form.atraso
                         });
-                        return swal.fire({
+                        swal.fire({
                           type:  'success',
-                          //title: `<b>${result.data.message}</b>`,
-                          title: 'Hola '+this.name,
-                          text: "Bienvenido al TED - Potosí!",
+                          title: 'Hola '+ this.name +' bienvenido al TED - Potosí!',
+                          text: `${result.data.message}`,
                           showConfirmButton: false,
                           timer: 3000
                         });
+                        this.mensaje = result.data.message;
+                        this.classsms = 'bg-success';
+                        setTimeout(() => {
+                            this.mensaje = 'Escanea el código QR de tu intransferible!';
+                            this.classsms = 'sidebar-dark-primary text-white';
+                        }, 5000);
+                        this.existe = false;
                         this.$Progress.finish();
                     })
-                    .catch(()=>{
-                        return swal.fire({
+                    .catch(error => {
+                        swal.fire({
                           type:  'error',
-                          title: 'Oops!!! '+this.name+' algo salió mal!',
-                          text: "Vuelve a intentarlo por favor.",
+                          title: `${error.response.data.message}`,
+                          text: 'Oops!!! volviste a marcar',
                           showConfirmButton: false,
                           timer: 3000
                         });
-
+                        this.mensaje = error.response.data.message;
+                        this.classsms = 'bg-danger';
+                        setTimeout(() => {
+                            this.mensaje = 'Escanea el código QR de tu intransferible!';
+                            this.classsms = 'sidebar-dark-primary text-white';
+                        }, 5000);
+                        this.existe = false;
                         this.$Progress.fail();
                     });
-                    this.existe = false;
+
                 }else{
-                    return swal.fire({
+                    this.mensaje = 'Oops!!! Código QR invalido!';
+                    this.classsms = 'bg-danger';
+                    setTimeout(() => {
+                        this.mensaje = 'Escanea el código QR de tu intransferible!';
+                        this.classsms = 'sidebar-dark-primary text-white';
+                    }, 5000);
+                    /*return swal.fire({
                       type:  'error',
                       title: 'Oops!!! Código QR invalido!',
                       text:  "Lo estamos grabando.",
                       showConfirmButton: false,
                       timer: 3000
-                    });
+                    });*/
+                    this.$Progress.fail();
                 }
-
+                this.$Progress.finish();
             },
 
             loadPersonal(){
