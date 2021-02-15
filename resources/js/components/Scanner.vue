@@ -10,7 +10,7 @@
                 <qrcode-stream @decode="onDecode" @init="onInit" />
             </div>
             <div class="card-footer cyane">
-                <p class="card-text" :class="this.classsms">
+                <p class="card-text" :class="this.classsms" style="border-radius:5em/5em;">
                     <b>{{ mensaje }}</b>
                 </p>
             </div>
@@ -21,7 +21,7 @@
            <table class="table">
               <thead class="sidebar-dark-primary text-white">
                 <tr>
-                  <th scope="col" class="text-center">Nro.</th>
+                  <th scope="col" class="text-center">Estado</th>
                   <th scope="col" class="text-center">Nombre</th>
                   <th scope="col" class="text-center">Cargo</th>
                   <th scope="col" class="text-center">Hora</th>
@@ -30,7 +30,7 @@
               </thead>
               <tbody>
                 <tr v-for="(item, index) of muestra">
-                  <td scope="row" class="text-center">{{ index+1 }}</td>
+                  <td scope="row" class="text-center"><i class="fa fa-check-square fa-2x bg-success" aria-hidden="true"></i></td>
                   <td>{{ item.nombre }}</td>
                   <td class="text-center">{{ item.cargo.nombre }}</td>
                   <td class="text-center">{{ item.hora }}</td>
@@ -51,7 +51,7 @@ import moment from 'moment';
             return {
                 muestra : [],
                 mensaje: 'Escanea el código QR de tu intransferible!',
-                classsms: 'bg-success',
+                classsms: 'sidebar-dark-primary text-white',
 
                 name:'', //nombre del que esta marcando
                 cargo:'', //cargo del que esta marcando
@@ -94,6 +94,7 @@ import moment from 'moment';
                 this.personal.map((data)=>{
                     if(data.cedula == parseInt(decodedString))
                     {
+                        this.muestra = [];
                         this.existe = true;
                         this.form.userid = data.id;
                         this.form.userci = data.cedula;

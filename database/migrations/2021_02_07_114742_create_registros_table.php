@@ -20,9 +20,10 @@ class CreateRegistrosTable extends Migration
             $table->unsignedBigInteger('horario_id');
             $table->time('llegadam')->nullable();
             $table->time('retirom')->nullable();
+            $table->time('atraso1')->nullable();
             $table->time('llegadat')->nullable();
             $table->time('retirot')->nullable();
-            $table->time('atraso')->nullable();
+            $table->time('atraso2')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('horario_id')->references('id')->on('horarios');

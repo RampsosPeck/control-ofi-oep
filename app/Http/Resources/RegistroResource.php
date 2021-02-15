@@ -16,19 +16,15 @@ class RegistroResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'codigo' => $this->codigo,
-            'dates' => [
-                'fecha_orden'      => $this->fecha_orden->diffForHumans(),
-                'fecha_orden_data' => $this->fecha_orden
-            ],
-            'fecha_entrega' => $this->fecha_entrega,
-            'total_bs' => $this->total_bs,
-            'delivery' => $this->delivery,
-            'estado' => $this->estado,
-            'especificacion' => $this->especificacion,
-            'nomdelivery' => $this->nomdelivery,
+            'fecha'   => $this->fecha,
+            'llegadam'=> $this->llegadam,
+            'retirom' => $this->retirom,
+            'atraso1' => $this->atraso1,
+            'llegadat'=> $this->llegadat,
+            'retirot' => $this->retirot,
+            'atraso2'  => $this->atraso2,
             'user' => new UserResource($this->user),
-            'carritodetalle' => CarritoResource::collection($this->carrito_detalles),
+            'horario' => new HorarioResource($this->horario)
         ];
     }
 }

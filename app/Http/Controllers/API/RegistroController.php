@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RegistroResource;
 use App\Registro;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,7 +21,12 @@ class RegistroController extends Controller
      */
     public function index()
     {
-        //
+        if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
+        {
+            //return User::orderBy('id','DESC')->paginate(10);
+            $registros = Registro::latest()->paginate(10);
+            return RegistroResource::collection($registros);
+        }
     }
 
     /**
@@ -57,7 +63,7 @@ class RegistroController extends Controller
                     'fecha'      => Carbon::parse($request['fecha']),
                     'horario_id' => $request['horarioid'],
                     'llegadam'   => Carbon::parse($request['hora']),
-                    'atraso'     => $request['atraso'],
+                    'atraso1'     => $request['atraso'],
                 ]);
                 return response()->json(['message' => 'Registró su ingreso en esta mañana con éxito!'], 200);
             }else{
@@ -70,7 +76,6 @@ class RegistroController extends Controller
                     'fecha'      => Carbon::parse($request['fecha']),
                     'horario_id' => $request['horarioid'],
                     'retirom'   => Carbon::parse($request['hora']),
-                    'atraso'     => $request['atraso'],
                 ]);
                 return response()->json(['message' => 'Registró su salida en esta mañana con exitoso!'], 200);
             }else{
@@ -84,7 +89,7 @@ class RegistroController extends Controller
                         'fecha'      => Carbon::parse($request['fecha']),
                         'horario_id' => $request['horarioid'],
                         'llegadat'   => Carbon::parse($request['hora']),
-                        'atraso'     => $request['atraso'],
+                        'atraso2'     => $request['atraso'],
                     ]);
                     return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
                 }else{
@@ -97,7 +102,6 @@ class RegistroController extends Controller
                         'fecha'      => Carbon::parse($request['fecha']),
                         'horario_id' => $request['horarioid'],
                         'retirot'   => Carbon::parse($request['hora']),
-                        'atraso'     => $request['atraso'],
                     ]);
                     return response()->json(['message' => 'Registró su salida en esta tarde con exitoso!'], 200);
                 }else{

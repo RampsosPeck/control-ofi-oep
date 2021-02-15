@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
 
         $suadmin = new User;
         $suadmin->name = 'Jorge Peralta';
-        $suadmin->cedula = '12345678';
+        $suadmin->cedula = '10519606';
         $suadmin->telefono = '75729198';
         $suadmin->type = 'admin';
         $suadmin->cargo_id = 1;

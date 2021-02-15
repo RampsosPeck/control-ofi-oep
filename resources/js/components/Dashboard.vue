@@ -82,9 +82,9 @@
                     <div class="icon">
                         <img src="/img/calendar.png" width="90" class="my-4">
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <router-link to="registros" class="small-box-footer">
                         VER <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                    </router-link>
                 </div>
             </div>
         </div>
