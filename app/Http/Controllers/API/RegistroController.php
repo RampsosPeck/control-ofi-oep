@@ -121,7 +121,13 @@ class RegistroController extends Controller
      */
     public function show($id)
     {
-        //
+        //return "estas aqui xx";
+        if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
+        {
+            //return User::orderBy('id','DESC')->paginate(10);
+            $registros = Registro::where('user_id',$id)->get();
+            return RegistroResource::collection($registros);
+        }
     }
 
     /**
