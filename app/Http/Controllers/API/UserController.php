@@ -141,7 +141,7 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:191',
-            'cedula' => 'required|numeric|digits:8|unique:users,cedula,'.$user->id,
+            'cedula' => 'required|numeric|digits:7|unique:users,cedula,'.$user->id,
         ]);
 
         $user->update($request->all());

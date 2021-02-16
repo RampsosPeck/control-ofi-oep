@@ -3282,6 +3282,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       //console.log(decodedString)
+      var audio = new Audio('/sound/success.mp3');
+      var audioerror = new Audio('/sound/errors.mp3');
       this.personal.map(function (data) {
         if (data.cedula == parseInt(decodedString)) {
           _this.muestra = [];
@@ -3357,6 +3359,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             atraso: _this.form.atraso
           });
 
+          audio.play();
           swal.fire({
             type: 'success',
             title: 'Hola ' + _this.name + ' bienvenido al TED - Potosí!',
@@ -3374,6 +3377,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
           _this.$Progress.finish();
         }).catch(function (error) {
+          audioerror.play();
           swal.fire({
             type: 'error',
             title: "".concat(error.response.data.message),
@@ -3398,6 +3402,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this.mensaje = 'Escanea el código QR de tu intransferible!';
           _this.classsms = 'sidebar-dark-primary text-white';
         }, 5000);
+        audioerror.play();
         /*return swal.fire({
           type:  'error',
           title: 'Oops!!! Código QR invalido!',

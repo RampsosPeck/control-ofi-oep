@@ -91,6 +91,8 @@ import moment from 'moment';
             },
             onDecode (decodedString) {
             //console.log(decodedString)
+                var audio = new Audio('/sound/success.mp3');
+                var audioerror = new Audio('/sound/errors.mp3');
                 this.personal.map((data)=>{
                     if(data.cedula == parseInt(decodedString))
                     {
@@ -168,6 +170,7 @@ import moment from 'moment';
                             hora: this.momento,
                             atraso: this.form.atraso
                         });
+                        audio.play();
                         swal.fire({
                           type:  'success',
                           title: 'Hola '+ this.name +' bienvenido al TED - Potosí!',
@@ -185,6 +188,7 @@ import moment from 'moment';
                         this.$Progress.finish();
                     })
                     .catch(error => {
+                        audioerror.play();
                         swal.fire({
                           type:  'error',
                           title: `${error.response.data.message}`,
@@ -209,6 +213,7 @@ import moment from 'moment';
                         this.mensaje = 'Escanea el código QR de tu intransferible!';
                         this.classsms = 'sidebar-dark-primary text-white';
                     }, 5000);
+                    audioerror.play();
                     /*return swal.fire({
                       type:  'error',
                       title: 'Oops!!! Código QR invalido!',
