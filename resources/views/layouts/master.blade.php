@@ -214,7 +214,7 @@
       <b>TED - POTOSÍ</b>
     </div>
      <b>
-    Create By &copy; Ing. Jorge Peralta </b>
+    Created By &copy; Ing. Jorge Peralta </b>
   </footer>
 </div>
 <!-- ./wrapper -->
