@@ -18,7 +18,6 @@
                         <th class="text-center">ID</th>
                         <th class="text-center">Datos</th>
                         <th class="text-center">Cédula</th>
-                        <th class="text-center">Bigrafía</th>
                         <th class="text-center">Cargo</th>
                         <th class="text-center">Fecha</th>
                         <th class="text-center">Acciones</th>
@@ -28,9 +27,9 @@
                         <td>{{ user.name }}
                           <small v-if="user.telefono"><b>Celular: </b></small> {{ user.telefono }}
                           <small v-if="user.email"><b>E-mail: </b></small> {{ user.email }}
+                          <small v-if="user.bio"><b>Biografía: </b></small> {{ user.bio }}
                         </td>
                         <td v-text="user.cedula"></td>
-                        <td v-text="user.bio"></td>
                         <td class="text-center">{{ user.cargo.nombre | upText }}</td>
                         <td class="text-center"> {{ user.created_at | myDate }}</td>
                         <td class="text-center ">

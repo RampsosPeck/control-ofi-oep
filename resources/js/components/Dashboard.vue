@@ -38,9 +38,9 @@
                     <div class="icon">
                         <img src="/img/reportes.png" width="90" class="my-4">
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <router-link to="reportes" class="small-box-footer">
                         GENERAR <i class="fas fa-arrow-circle-right"></i>
-                    </a>
+                    </router-link>
                 </div>
             </div>
         </div>

@@ -57,14 +57,24 @@ class HorarioController extends Controller
                 'salidat' => 'date_format:H:i|after:ingresom',
             ]);
         }else{
-            $this->validate($request,[
-                'nombre' => ['required','unique:cargos,nombre'],
-                'fecha' => ['required'],
-                'ingresom' => 'date_format:H:i',
-                'salidam' => 'date_format:H:i|after:ingresom',
-                'ingresot' => 'date_format:H:i',
-                'salidat' => 'date_format:H:i|after:ingresot',
-            ]);
+            if($request['salidam']){
+                $this->validate($request,[
+                    'nombre' => ['required','unique:cargos,nombre'],
+                    'fecha' => ['required'],
+                    'ingresom' => 'date_format:H:i',
+                    'salidam' => 'date_format:H:i|after:ingresom',
+                    'ingresot' => 'date_format:H:i',
+                    'salidat' => 'date_format:H:i|after:ingresot',
+                ]);
+            }else{
+                $this->validate($request,[
+                    'nombre' => ['required','unique:cargos,nombre'],
+                    'fecha' => ['required'],
+                    'ingresom' => 'date_format:H:i',
+                    'salidat' => 'date_format:H:i',
+                ]);
+            }
+
         }
 
         //return ['message' => 'I have your data'];
@@ -128,13 +138,21 @@ class HorarioController extends Controller
                 'salidat'  => 'required',
             ]);
         }else{
-            $this->validate($request,[
-                'nombre'   => ['required'],
-                'ingresom' => 'required',
-                'salidam'  => 'required',
-                'ingresot' => 'required',
-                'salidat'  => 'required',
-            ]);
+            if($request['salidam']){
+                $this->validate($request,[
+                    'nombre' => ['required','unique:cargos,nombre'],
+                    'ingresom' => 'date_format:H:i:s',
+                    'salidam' => 'date_format:H:i:s|after:ingresom',
+                    'ingresot' => 'date_format:H:i:s',
+                    'salidat' => 'date_format:H:i:s|after:ingresot',
+                ]);
+            }else{
+                $this->validate($request,[
+                    'nombre' => ['required','unique:cargos,nombre'],
+                    'ingresom' => 'date_format:H:i:s',
+                    'salidat' => 'date_format:H:i:s',
+                ]);
+            }
         }
         //$horario->update($request->all());
         $horario->nombre = $request['nombre'];

@@ -2610,7 +2610,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -64334,7 +64333,27 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _vm._m(4)
+      _c("div", { staticClass: "col-md-4" }, [
+        _c(
+          "div",
+          { staticClass: "small-box sidebar-dark-primary" },
+          [
+            _vm._m(4),
+            _vm._v(" "),
+            _vm._m(5),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              { staticClass: "small-box-footer", attrs: { to: "reportes" } },
+              [
+                _vm._v("\n                    GENERAR "),
+                _c("i", { staticClass: "fas fa-arrow-circle-right" })
+              ]
+            )
+          ],
+          1
+        )
+      ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row justify-content-center mt-5" }, [
@@ -64343,9 +64362,9 @@ var render = function() {
           "div",
           { staticClass: "small-box sidebar-dark-primary" },
           [
-            _vm._m(5),
-            _vm._v(" "),
             _vm._m(6),
+            _vm._v(" "),
+            _vm._m(7),
             _vm._v(" "),
             _c(
               "router-link",
@@ -64365,9 +64384,9 @@ var render = function() {
           "div",
           { staticClass: "small-box sidebar-dark-primary" },
           [
-            _vm._m(7),
-            _vm._v(" "),
             _vm._m(8),
+            _vm._v(" "),
+            _vm._m(9),
             _vm._v(" "),
             _c(
               "router-link",
@@ -64387,9 +64406,9 @@ var render = function() {
           "div",
           { staticClass: "small-box sidebar-dark-primary" },
           [
-            _vm._m(9),
-            _vm._v(" "),
             _vm._m(10),
+            _vm._v(" "),
+            _vm._m(11),
             _vm._v(" "),
             _c(
               "router-link",
@@ -64467,33 +64486,28 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
-      _c("div", { staticClass: "small-box sidebar-dark-primary" }, [
-        _c("div", { staticClass: "inner" }, [
-          _c("h3", { staticStyle: { color: "#fff" } }, [
-            _c("i", {
-              staticClass: "fa fa-indent",
-              attrs: { "aria-hidden": "true" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("p", { staticStyle: { color: "#fff" } }, [
-            _c("b", [_vm._v("Reportes")])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "icon" }, [
-          _c("img", {
-            staticClass: "my-4",
-            attrs: { src: "/img/reportes.png", width: "90" }
-          })
-        ]),
-        _vm._v(" "),
-        _c("a", { staticClass: "small-box-footer", attrs: { href: "#" } }, [
-          _vm._v("\n                    GENERAR "),
-          _c("i", { staticClass: "fas fa-arrow-circle-right" })
-        ])
+    return _c("div", { staticClass: "inner" }, [
+      _c("h3", { staticStyle: { color: "#fff" } }, [
+        _c("i", {
+          staticClass: "fa fa-indent",
+          attrs: { "aria-hidden": "true" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("p", { staticStyle: { color: "#fff" } }, [
+        _c("b", [_vm._v("Reportes")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon" }, [
+      _c("img", {
+        staticClass: "my-4",
+        attrs: { src: "/img/reportes.png", width: "90" }
+      })
     ])
   },
   function() {
@@ -65898,16 +65912,22 @@ var render = function() {
                                 _vm._v(
                                   " " +
                                     _vm._s(user.email) +
+                                    "\n                          "
+                                ),
+                                user.bio
+                                  ? _c("small", [
+                                      _c("b", [_vm._v("Biografía: ")])
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(
+                                  " " +
+                                    _vm._s(user.bio) +
                                     "\n                        "
                                 )
                               ]),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(user.cedula) }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: { textContent: _vm._s(user.bio) }
                               }),
                               _vm._v(" "),
                               _c("td", { staticClass: "text-center" }, [
@@ -66421,8 +66441,6 @@ var staticRenderFns = [
       _c("th", { staticClass: "text-center" }, [_vm._v("Datos")]),
       _vm._v(" "),
       _c("th", { staticClass: "text-center" }, [_vm._v("Cédula")]),
-      _vm._v(" "),
-      _c("th", { staticClass: "text-center" }, [_vm._v("Bigrafía")]),
       _vm._v(" "),
       _c("th", { staticClass: "text-center" }, [_vm._v("Cargo")]),
       _vm._v(" "),
