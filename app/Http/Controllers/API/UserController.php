@@ -24,10 +24,11 @@ class UserController extends Controller
     {
         //$this->authorize('isAdmin');
 
-        if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
+        //if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
+        if(\Gate::allows('isAdmin') || \Gate::allows('isUser'))
         {
             //return User::orderBy('id','DESC')->paginate(10);
-            $users = User::latest()->paginate(10);
+            $users = User::latest()->get();
             return UserResource::collection($users);
         }
 
@@ -38,7 +39,7 @@ class UserController extends Controller
 
         if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
         {
-            $users = User::where('type','user')->latest()->paginate(10);
+            $users = User::where('type','user')->latest()->get();
             return UserResource::collection($users);
         }
 
@@ -143,7 +144,7 @@ class UserController extends Controller
             'name' => 'required|string|max:191',
             'cedula' => 'required|unique:users,cedula,'.$user->id,
         ]);
-
+        //$user->password = bcrypt('alcaline21.');
         $user->update($request->all());
 
         return ['message' => 'Actualizar la información del usuario'];

@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="container">
+        <div v-if="$gate.isAdminOrAuthor()">
         <div class="row justify-content-center mt-5">
             <div class="col-md-4">
                 <div class="small-box sidebar-dark-primary">
@@ -87,6 +88,32 @@
                     </router-link>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-4">
+                <div class="small-box sidebar-dark-primary">
+                    <div class="inner">
+                        <h3 style="color:#fff;"><i class="fa fa-qrcode" aria-hidden="true"></i></h3>
+                        <p style="color:#fff;"><b>Horario variado</b></p>
+                    </div>
+                    <div class="icon">
+                        <img src="/img/qrscanweb.png" width="90" class="my-4">
+                    </div>
+                    <router-link to="scaneo" class="small-box-footer">
+                        INICIAR <i class="fas fa-arrow-circle-right"></i>
+                    </router-link>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+        </div>
+        <div v-if="!$gate.isAdminOrAuthor()">
+            <web-user></web-user>
         </div>
     </div>
 </template>

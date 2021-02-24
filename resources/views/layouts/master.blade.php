@@ -49,14 +49,14 @@
             <div class="image">
               <img src="{{ asset('/img/useradmin.png') }}" class="img-circle elevation-2" alt="User Image">
             </div>
-            <div class="info">
-              <a href="#" class="d-block"> <b>{{ Auth::user()->name }}</b></a>
+            <div class="info m-0">
+              <a href="#" class="d-block"> <b>{{ Auth::user()->name }}</b> <br><b>{{ Auth::user()->cargo->nombre }}</b></a>
             </div>
           </div>
 
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
+          @can('isAdmin')
           <li class="nav-item">
             <router-link to="dashboard" class="nav-link">
               <i> <img src="{{ asset('/img/monitor.png') }}" alt="" class="nav-icon"> </i>
@@ -65,100 +65,69 @@
               </p>
             </router-link>
           </li>
-
           <li class="nav-item">
             <router-link to="users" class="nav-link ">
               <i> <img src="{{ asset('/img/group.png') }}" alt="" class="nav-icon"> </i>
               <p>Usuarios</p>
             </router-link>
           </li>
-
           <li class="nav-item">
             <router-link to="personal" class="nav-link ">
               <i> <img src="{{ asset('/img/employee.png') }}" alt="" class="nav-icon"> </i>
               <p>Personal</p>
             </router-link>
           </li>
-
           <li class="nav-item">
             <router-link to="cargos" class="nav-link ">
               <i> <img src="{{ asset('/img/ballot.png') }}" alt="" class="nav-icon"> </i>
               <p>Cargos</p>
             </router-link>
           </li>
-
           <li class="nav-item">
             <router-link to="horario" class="nav-link ">
               <i> <img src="{{ asset('/img/alarm-clock.png') }}" alt="" class="nav-icon"> </i>
               <p>Horario</p>
             </router-link>
           </li>
-
           <li class="nav-item">
             <router-link to="scan" class="nav-link ">
               <i> <img src="{{ asset('/img/qr-menu.png') }}" alt="" class="nav-icon"> </i>
               <p>Scanner</p>
             </router-link>
           </li>
-
+          <li class="nav-item">
+            <router-link to="scaneo" class="nav-link ">
+              <i> <img src="{{ asset('/img/qr-menu.png') }}" alt="" class="nav-icon"> </i>
+              <p>Escaner dinámico</p>
+            </router-link>
+          </li>
           <li class="nav-item">
             <router-link to="registros" class="nav-link ">
               <i> <img src="{{ asset('/img/availability.png') }}" alt="" class="nav-icon"> </i>
               <p>Registros</p>
             </router-link>
           </li>
-
-
           <li class="nav-item">
             <router-link to="reportes" class="nav-link ">
               <i> <img src="{{ asset('/img/lista.png') }}" alt="" class="nav-icon"> </i>
               <p>Reportes</p>
             </router-link>
           </li>
-
-          <!--<li class="nav-item has-treeview">
-            <a href="#" class="nav-link ">
-              <i class="nav-icon fas fa-cog green"></i>
-              <p>
-                Administración
-                <i class="right fa fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <router-link to="users" class="nav-link ">
-                  <i class="fas fa-users nav-icon"></i>
-                  <p>Usuarios</p>
-                </router-link>
-              </li>
-              <li class="nav-item">
-                <a href="/invoice" class="nav-link">
-                  <i class="fas fa-print nav-icon"></i>
-                  <p>Imprimir</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-
-          @can('isAdmin')
+          @endcan
+          @can('isUser')
           <li class="nav-item">
-            <router-link to="/developer"  class="nav-link">
-              <i class="nav-icon fas fa-cogs purple"></i>
-              <p>
-                Developer
-              </p>
+            <router-link to="scan" class="nav-link ">
+              <i> <img src="{{ asset('/img/qr-menu.png') }}" alt="" class="nav-icon"> </i>
+              <p>Escaner normal</p>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="scaneo" class="nav-link ">
+              <i> <img src="{{ asset('/img/qr-menu.png') }}" alt="" class="nav-icon"> </i>
+              <p>Escaner dinámico</p>
             </router-link>
           </li>
           @endcan
-
-          <li class="nav-item">
-            <router-link to="profile"  class="nav-link">
-              <i class="nav-icon fa fa-th orange"></i>
-              <p>
-                Profile
-              </p>
-            </router-link>
-          </li>-->
           <li class="nav-item">
             <a class="nav-link" href="{{ route('logout') }}"
                onclick="event.preventDefault();

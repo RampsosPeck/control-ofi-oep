@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResources(['user' => 'API\UserController']);
 Route::apiResources(['registro' => 'API\RegistroController']);
+Route::post('regicontinuo', 'API\RegistroController@scandos');
 
 Route::get('profile','API\UserController@profile');
 Route::get('findUser','API\UserController@search');

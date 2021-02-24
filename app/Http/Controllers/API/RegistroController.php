@@ -47,17 +47,65 @@ class RegistroController extends Controller
      */
     public function store(Request $request)
     {
-        //return $request->all();
-        $var = Registro::where('user_id',$request['userid'])->where('fecha',Carbon::parse($request['fecha']))->first();
-        //if($request['userid'] == 1){
-        /*if(!empty($var)){
-            return $var->llegadam;
-        }else{
-            return 'esta vacio';
-        }*/
-        if ($request['marca'] === 'maniana')
+        //return $request;
+        $registro = Registro::where('user_id',$request['userid'])->where('fecha',Carbon::parse($request['fecha']))->first();
+
+        if($registro)
         {
-            if(empty($var->llegadam)){
+            if ($request['marca'] === 'maniana')
+            {
+                if(empty($registro->llegadam)){
+                    $registro->user_id = $request['userid'];
+                    $registro->fecha   = Carbon::parse($request['fecha']);
+                    $registro->horario_id = $request['horarioid'];
+                    $registro->llegadam   = Carbon::parse($request['hora']);
+                    $registro->atraso1    = $request['atraso'];
+                    $registro->save();
+                    return response()->json(['message' => 'Registró su ingreso en esta mañana con éxito!'], 200);
+                }else{
+                    return response()->json(['message' => 'Ya se registró tu entrada en esta mañana!'], 422);
+                }
+            } elseif ($request['marca'] === 'mediodia') {
+                if(empty($registro->retirom)){
+                    $registro->user_id = $request['userid'];
+                    $registro->fecha   = Carbon::parse($request['fecha']);
+                    $registro->horario_id = $request['horarioid'];
+                    $registro->retirom   = Carbon::parse($request['hora']);
+                    $registro->save();
+                    return response()->json(['message' => 'Registró su salida en esta mañana con exitoso!'], 200);
+                }else{
+                    return response()->json(['message' => 'Ya se registró tu salida en esta mañana!'], 422);
+                }
+            } else {
+                if ($request['marca'] === 'tarde'){
+                    if(empty($registro->llegadat)){
+                        $registro->user_id = $request['userid'];
+                        $registro->fecha   = Carbon::parse($request['fecha']);
+                        $registro->horario_id = $request['horarioid'];
+                        $registro->llegadam   = Carbon::parse($request['hora']);
+                        $registro->atraso2    = $request['atraso'];
+                        $registro->save();
+                        return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
+                    }else{
+                        return response()->json(['message' => 'Ya se registró tu entrada en esta tarde!'], 422);
+                    }
+                }else{
+                    if(empty($registro->retirot)){
+                        $registro->user_id = $request['userid'];
+                        $registro->fecha   = Carbon::parse($request['fecha']);
+                        $registro->horario_id = $request['horarioid'];
+                        $registro->retirot   = Carbon::parse($request['hora']);
+                        $registro->save();
+                        return response()->json(['message' => 'Registró su salida en esta tarde con exitoso!'], 200);
+                    }else{
+                        return response()->json(['message' => 'Ya se registró tu salida en esta tarde!'], 422);
+                    }
+
+                }
+            }
+        }else{
+            if ($request['marca'] === 'maniana')
+            {
                 Registro::create([
                     'user_id'    => $request['userid'],
                     'fecha'      => Carbon::parse($request['fecha']),
@@ -66,11 +114,7 @@ class RegistroController extends Controller
                     'atraso1'     => $request['atraso'],
                 ]);
                 return response()->json(['message' => 'Registró su ingreso en esta mañana con éxito!'], 200);
-            }else{
-                return response()->json(['message' => 'Ya se registró tu entrada en esta mañana!'], 422);
-            }
-        } elseif ($request['marca'] === 'retirom') {
-            if(empty($var->retirom)){
+            } elseif ($request['marca'] === 'mediodia') {
                 Registro::create([
                     'user_id'    => $request['userid'],
                     'fecha'      => Carbon::parse($request['fecha']),
@@ -78,12 +122,8 @@ class RegistroController extends Controller
                     'retirom'   => Carbon::parse($request['hora']),
                 ]);
                 return response()->json(['message' => 'Registró su salida en esta mañana con exitoso!'], 200);
-            }else{
-                return response()->json(['message' => 'Ya se registró tu salida en esta mañana!'], 422);
-            }
-        } else {
-            if ($request['marca'] === 'tarde'){
-                if(empty($var->llegadat)){
+            } else {
+                if ($request['marca'] === 'tarde'){
                     Registro::create([
                         'user_id'    => $request['userid'],
                         'fecha'      => Carbon::parse($request['fecha']),
@@ -93,10 +133,6 @@ class RegistroController extends Controller
                     ]);
                     return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
                 }else{
-                    return response()->json(['message' => 'Ya se registró tu entrada en esta tarde!'], 422);
-                }
-            }else{
-                if(empty($var->retirot)){
                     Registro::create([
                         'user_id'    => $request['userid'],
                         'fecha'      => Carbon::parse($request['fecha']),
@@ -104,13 +140,9 @@ class RegistroController extends Controller
                         'retirot'   => Carbon::parse($request['hora']),
                     ]);
                     return response()->json(['message' => 'Registró su salida en esta tarde con exitoso!'], 200);
-                }else{
-                    return response()->json(['message' => 'Ya se registró tu salida en esta tarde!'], 422);
                 }
-
             }
         }
-
     }
 
     /**
@@ -162,5 +194,115 @@ class RegistroController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function scandos(Request $request)
+    {
+        /*$momento = strtotime( $request['hora'] );
+        $hora1 = strtotime( "10:00" );
+        $hora2 = strtotime( "13:30" );
+        $hora3 = strtotime( "16:00" );
+        if( $momento < $hora1 ) {
+            return 'maniana';
+        } else if ( $momento < $hora2 ) {
+            return 'mediodia';
+        } else {
+            if ($momento < $hora3){
+                return 'tarde';
+            }else{
+                return 'nombre';
+            }
+        }*/
+        //return $request;
+        $registro = Registro::where('user_id',$request['userid'])->where('fecha',Carbon::parse($request['fecha']))->first();
+
+        if($registro)
+        {
+            if ($request['marca'] === 'maniana')
+            {
+                if(empty($registro->llegadam)){
+                    $registro->user_id = $request['userid'];
+                    $registro->fecha   = Carbon::parse($request['fecha']);
+                    $registro->horario_id = $request['horarioid'];
+                    $registro->llegadam   = Carbon::parse($request['hora']);
+                    $registro->save();
+                    return response()->json(['message' => 'Registró su ingreso en esta mañana con éxito!'], 200);
+                }else{
+                    return response()->json(['message' => 'Ya se registró tu entrada en esta mañana!'], 422);
+                }
+            } elseif ($request['marca'] === 'mediodia') {
+                if(empty($registro->retirom)){
+                    $registro->user_id = $request['userid'];
+                    $registro->fecha   = Carbon::parse($request['fecha']);
+                    $registro->horario_id = $request['horarioid'];
+                    $registro->retirom   = Carbon::parse($request['hora']);
+                    $registro->save();
+                    return response()->json(['message' => 'Registró su salida en esta mañana con exitoso!'], 200);
+                }else{
+                    return response()->json(['message' => 'Ya se registró tu salida en esta mañana!'], 422);
+                }
+            } else {
+                if ($request['marca'] === 'tarde'){
+                    if(empty($registro->llegadat)){
+                        $registro->user_id = $request['userid'];
+                        $registro->fecha   = Carbon::parse($request['fecha']);
+                        $registro->horario_id = $request['horarioid'];
+                        $registro->llegadam   = Carbon::parse($request['hora']);
+                        $registro->save();
+                        return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
+                    }else{
+                        return response()->json(['message' => 'Ya se registró tu entrada en esta tarde!'], 422);
+                    }
+                }else{
+                    if(empty($registro->retirot)){
+                        $registro->user_id = $request['userid'];
+                        $registro->fecha   = Carbon::parse($request['fecha']);
+                        $registro->horario_id = $request['horarioid'];
+                        $registro->retirot   = Carbon::parse($request['hora']);
+                        $registro->save();
+                        return response()->json(['message' => 'Registró su salida en esta tarde con exitoso!'], 200);
+                    }else{
+                        return response()->json(['message' => 'Ya se registró tu salida en esta tarde!'], 422);
+                    }
+
+                }
+            }
+        }else{
+            if ($request['marca'] === 'maniana')
+            {
+                Registro::create([
+                    'user_id'    => $request['userid'],
+                    'fecha'      => Carbon::parse($request['fecha']),
+                    'horario_id' => $request['horarioid'],
+                    'llegadam'   => Carbon::parse($request['hora']),
+                ]);
+                return response()->json(['message' => 'Registró su ingreso en esta mañana con éxito!'], 200);
+            } elseif ($request['marca'] === 'mediodia') {
+                Registro::create([
+                    'user_id'    => $request['userid'],
+                    'fecha'      => Carbon::parse($request['fecha']),
+                    'horario_id' => $request['horarioid'],
+                    'retirom'   => Carbon::parse($request['hora']),
+                ]);
+                return response()->json(['message' => 'Registró su salida en esta mañana con exitoso!'], 200);
+            } else {
+                if ($request['marca'] === 'tarde'){
+                    Registro::create([
+                        'user_id'    => $request['userid'],
+                        'fecha'      => Carbon::parse($request['fecha']),
+                        'horario_id' => $request['horarioid'],
+                        'llegadat'   => Carbon::parse($request['hora']),
+                    ]);
+                    return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
+                }else{
+                    Registro::create([
+                        'user_id'    => $request['userid'],
+                        'fecha'      => Carbon::parse($request['fecha']),
+                        'horario_id' => $request['horarioid'],
+                        'retirot'   => Carbon::parse($request['hora']),
+                    ]);
+                    return response()->json(['message' => 'Registró su salida en esta tarde con exitoso!'], 200);
+                }
+            }
+        }
     }
 }

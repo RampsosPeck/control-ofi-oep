@@ -18,7 +18,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Sura:wght@700&display=swap" rel="stylesheet">
 
-        <link href="{{ asset('css/styleinit.css') }}" rel="stylesheet">
+        <!-- <link href="{{ asset('css/styleinit.css') }}" rel="stylesheet"> -->
 
     </head>
     <body class="sidebar-dark-primary">

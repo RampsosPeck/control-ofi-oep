@@ -4,7 +4,7 @@
       <div class="col-md-4">
           <div class="card text-center"  style='width:18rem;'>
             <div class="card-header cyane">
-                <h5><b>REGISTRO DE ASISTENCIA</b></h5>
+                <h5><b>REGISTRO DE ASISTENCIA EN HORARIO VARIADO</b></h5>
             </div>
             <div class="card-body m-0 p-1 sidebar-dark-primary">
                 <qrcode-stream @decode="onDecode" @init="onInit" />
@@ -15,11 +15,10 @@
                 </p>
             </div>
             <div class="text-center sidebar-dark-primary text-warning">
-              <p class="mb-0"><b>HORARIO ACTIVO</b></p>
               <p class="mb-0"><b>Mañana: </b></p>
-                Entrada: <b>{{ horario.ingresom }}</b> Salida: <b>{{ horario.salidam }}</b>
+                Entrada < <b>10:00</b> > Salida
               <p  class="mb-0"><b>Tarde: </b></p>
-                Entrada: <b>{{ horario.ingresot }}</b> Salida: <b>{{ horario.salidat }}</b>
+                Entrada < <b>16:00</b> > Salida
             </div>
           </div>
       </div>
@@ -32,7 +31,6 @@
                   <th scope="col" class="text-center">Nombre</th>
                   <th scope="col" class="text-center">Cargo</th>
                   <th scope="col" class="text-center">Hora</th>
-                  <th scope="col" class="text-center">Atraso</th>
                 </tr>
               </thead>
               <tbody>
@@ -41,7 +39,6 @@
                   <td>{{ item.nombre }}</td>
                   <td class="text-center">{{ item.cargo.nombre }}</td>
                   <td class="text-center">{{ item.hora }}</td>
-                  <td class="text-center">{{ item.atraso }}</td>
                 </tr>
               </tbody>
             </table>
@@ -76,34 +73,17 @@ import moment from 'moment';
                 fechahoy:'', //saca la fecha de hoy
                 personal:{}, //personal que va a marcar el qr
                 horario:'', //con que horario va a sacar su atraso
-                retraso:'', //que tanto es su retraso
                 form: new Form({
                     userid: '', //usuario id
                     userci: '', //cedula del usuario
                     fecha: '', //fecha en que esta marcando
                     hora: '', //hora en que esta marcando
-                    atraso:'', //el atraso para que vaya a sumar
                     marca:'', //Mmaniana, mediodia, tarde, noche
                     horarioid:'' //que horario estamos usando (horario continuo)
                 })
             }
         },
         methods:{
-            onAtraso: function(momento1, ingreso2) {
-                var hora1 = (momento1).split(":"),
-                hora2 = (ingreso2).split(":"),
-                    t1 = new Date(),
-                    t2 = new Date();
-
-                t1.setHours(hora1[0], hora1[1], hora1[2]);
-                t2.setHours(hora2[0], hora2[1], hora2[2]);
-
-                //Aquí hago la resta
-                t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
-
-                //Imprimo el resultado
-                return (t1.getHours() ? t1.getHours() + (t1.getHours() > 1 ? ":" : ":") : "") + (t1.getMinutes() ? "" + t1.getMinutes() + (t1.getMinutes() > 1 ? ":" : ":") : "") + (t1.getSeconds() ? (t1.getHours() || t1.getMinutes() ? "" : "") + t1.getSeconds() + (t1.getSeconds() > 1 ? "" : "") : "");
-            },
             onDecode (decodedString) {
             //console.log(decodedString)
                 var audio = new Audio('/sound/success.mp3');
@@ -126,63 +106,28 @@ import moment from 'moment';
                     let hoy = new Date();
                     this.momento = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
 
-                    if (moment(this.momento,'HH:mm:ss')  < moment('10:00:00','HH:mm:ss')) {
-                        if(moment(this.momento,'HH:mm:ss') > moment(this.horario.ingresom,'HH:mm:ss')){
-                            this.form.atraso = this.onAtraso(this.momento, this.horario.ingresom);
-                        }else{
-                            this.form.atraso = '00:00:00';
-                        }
+                    if ( moment(this.momento,'HH:mm:ss') <= moment('10:00:00','HH:mm:ss')) {
                         this.form.marca = 'maniana';
-                    } else if (moment(this.momento,'HH:mm:ss') <= moment('13:30:00','HH:mm:ss')) {
-                        if (moment(this.momento,'HH:mm:ss') <= moment(this.horario.salidam,'HH:mm:ss')) {
-                            return swal.fire({
-                              type:  'error',
-                              title: 'Oops!!! '+this.name+' aún no es hora!',
-                              text: "Se le tomará como abandono.",
-                              showConfirmButton: false,
-                              timer: 3000
-                            });
-                            this.existe = false;
-                        }else{
-                            this.form.marca = 'mediodia';
-                            this.form.atraso = '00:00:00';
-                        }
+                    } else if ( moment(this.momento,'HH:mm:ss') <= moment('13:30:00','HH:mm:ss') ) {
+                        this.form.marca = 'mediodia';
                     } else {
                         if (moment(this.momento,'HH:mm:ss') <= moment('16:00:00','HH:mm:ss'))
                         {
-                            if(moment(this.momento,'HH:mm:ss') > moment(this.horario.ingresot,'HH:mm:ss')){
-                                this.form.atraso = this.onAtraso(this.momento, this.horario.ingresot);
-                            }else{
-                                this.form.atraso = '00:00:00';
-                            }
                             this.form.marca = 'tarde';
                         }else{
-                            if (moment(this.momento,'HH:mm:ss') <= moment(this.horario.salidat,'HH:mm:ss')) {
-                                return swal.fire({
-                                  type:  'error',
-                                  title: 'Oops!!! '+this.name+' aún no es hora!',
-                                  text: "Se le tomará como abandono.",
-                                  showConfirmButton: false,
-                                  timer: 3000
-                                });
-                                this.existe = false;
-                            }else{
-                                this.form.marca = 'noche';
-                                this.form.atraso = '00:00:00';
-                            }
+                            this.form.marca = 'noche';
                         }
                     }
 
                     this.form.fecha = this.fechahoy;
                     this.form.hora = this.momento;
                     this.form.horarioid = this.horario.id;
-                    this.form.post('api/registro')
+                    this.form.post('api/regicontinuo')
                     .then((result)=>{
                         this.muestra.push({
                             nombre: this.name,
                             cargo: this.cargo,
-                            hora: this.momento,
-                            atraso: this.form.atraso
+                            hora: this.momento
                         });
                         audio.play();
                         swal.fire({
@@ -228,20 +173,13 @@ import moment from 'moment';
                         this.classsms = 'sidebar-dark-primary text-white';
                     }, 5000);
                     audioerror.play();
-                    /*return swal.fire({
-                      type:  'error',
-                      title: 'Oops!!! Código QR invalido!',
-                      text:  "Lo estamos grabando.",
-                      showConfirmButton: false,
-                      timer: 3000
-                    });*/
                     this.$Progress.fail();
                 }
                 this.$Progress.finish();
             },
 
             loadPersonal(){
-                //if(this.$gate.isAdminOrAuthor()){
+                //if(this.$gate.isUser()){
                   axios.get("api/user").then(({data}) => (this.personal = data.data));
                   axios.get("api/horactiva").then(({data}) => (this.horario = data.data));
                 //}
@@ -271,7 +209,6 @@ import moment from 'moment';
             this.momento = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
 
             this.fechahoy = hoy.getDate() + '-' + (hoy.getMonth()+1) + '-' + hoy.getFullYear();
-
             this.loadPersonal();
             Fire.$on('AfterCreate',() => {
                 this.loadPersonal();
@@ -280,7 +217,6 @@ import moment from 'moment';
         }
     }
 </script>
-
 
 
 

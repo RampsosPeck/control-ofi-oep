@@ -15,40 +15,41 @@
                   <div class="card-body table-responsive p-0">
                     <table class="table table-striped">
                       <tbody>
-                      <tr>
-                        <th class="text-center">Nro.</th>
-                        <th class="text-center">Nombre</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Ingreso</th>
-                        <th class="text-center">Salida</th>
-                        <th class="text-center">Ingreso</th>
-                        <th class="text-center">Salida</th>
-                        <th class="text-center">Acciones</th>
-                      </tr>
-                      <tr v-for="(horario, key, index)  in horarios.data" :key="horario.id" >
-                        <td v-text="horario.id"></td>
-                        <td v-text="horario.nombre"></td>
-                        <td class="text-center"> {{ horario.fecha | myDate }}</td>
-                        <td v-text="horario.ingresom"></td>
-                        <td v-text="horario.salidam"></td>
-                        <td v-text="horario.ingresot"></td>
-                        <td v-text="horario.salidat"></td>
-                        <td class="text-center">
-                            <a href="#" @click="editModal(horario)">
-                                <i class="fas fa-edit blue"></i>
-                            </a> /
-                            <a href="#" @click="deleteHorario(horario.id)">
-                                <i class="fas fa-trash red"></i>
-                            </a>  /
-                            <a href="#" @click="activarHorario(horario.id)" v-if="!horario.estado">
-                                <i class="fas fa-check yellow"></i>
-                            </a>
-                            <span v-else>
-                              <b class="green"> ACTIVO </b>
-                            </span>
-                        </td>
-                      </tr>
-                    </tbody></table>
+                        <tr>
+                          <th class="text-center">Nro.</th>
+                          <th class="text-center">Nombre</th>
+                          <th class="text-center">Fecha</th>
+                          <th class="text-center">Ingreso</th>
+                          <th class="text-center">Salida</th>
+                          <th class="text-center">Ingreso</th>
+                          <th class="text-center">Salida</th>
+                          <th class="text-center">Acciones</th>
+                        </tr>
+                        <tr v-for="(horario, key, index)  in horarios.data" :key="horario.id" >
+                          <td v-text="horario.id"></td>
+                          <td v-text="horario.nombre"></td>
+                          <td class="text-center"> {{ horario.fecha | myDate }}</td>
+                          <td v-text="horario.ingresom"></td>
+                          <td v-text="horario.salidam"></td>
+                          <td v-text="horario.ingresot"></td>
+                          <td v-text="horario.salidat"></td>
+                          <td class="text-center">
+                              <a href="#" @click="editModal(horario)">
+                                  <i class="fas fa-edit blue"></i>
+                              </a> /
+                              <a href="#" @click="deleteHorario(horario.id)">
+                                  <i class="fas fa-trash red"></i>
+                              </a>  /
+                              <a href="#" @click="activarHorario(horario.id)" v-if="!horario.estado">
+                                  <i class="fas fa-check yellow"></i>
+                              </a>
+                              <span v-else>
+                                <b class="green"> ACTIVO </b>
+                              </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
 
                 </div>

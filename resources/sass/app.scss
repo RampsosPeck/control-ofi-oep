@@ -58,3 +58,120 @@
 .cyane {
   background-color: #61ffff;
 }
+
+/*El scanner en funcionamiento*/
+
+.hero{
+    height:100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6));
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero h1{
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    font-family: 'Sura', serif;
+    font-size: 65px;
+    line-height: 85px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.hero .footerleft{
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    font-family: 'Sura', serif;
+    font-size: 15px;
+    line-height: 85px;
+    position: absolute;
+    left: 50%;
+    top: 90%;
+    transform: translate(-50%,-50%);
+    opacity: 0.5;
+}
+
+
+.neon-light{
+    width: 15px;
+    height: 500px;
+    background: transparent;
+    border-radius: 15px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px 5px #fff,
+        inset 0 0 20px #fff,
+        0 0 160px 20px #61ffff,
+        inset 0 0 20px #61ffff,
+        0 0 320px 30px #61ffff,
+        inset 0 0 20px #61ffff;
+    animation: run 5s linear infinite;
+}
+
+@keyframes run{
+    0%{
+        left: 10%;
+        opacity: 0;
+    }
+    2%{
+        left: 10%;
+        opacity: 1;
+    }
+    4%{
+        left: 10%;
+        opacity: 0;
+    }
+    6%{
+        left: 10%;
+        opacity: 1;
+    }
+    8%{
+        left: 10%;
+        opacity: 0;
+    }
+    10%{
+        left: 10%;
+        opacity: 1;
+    }
+    100%{
+        left: 90%;
+        opacity: 1;
+    }
+}
+
+/****** AQUI VA LO RESPONSIVO DEL FOOTER *******/
+@media screen and (max-width:900px){
+    .hero h1{
+        font-size: 75px;
+    }
+}
+
+@media screen and (max-width:500px){
+
+    .hero h1{
+        font-size: 45px;
+    }
+
+}
+
+
+@media screen and (max-width:767px ){
+    .hero h1{
+        font-size: 35px;
+    }
+}
+
+@media screen and (max-width:575px ){
+    .hero h1{
+        font-size: 35px;
+    }
+}
+/*HAsta aqui el scanner*/

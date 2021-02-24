@@ -72,6 +72,7 @@ let routes = [
     { path: '/scan', component: require('./components/Scanner.vue').default },
     { path: '/registros', component: require('./components/Registros.vue').default },
     { path: '/reportes', component: require('./components/Reporte.vue').default },
+    { path: '/scaneo', component: require('./components/Scannerweb.vue').default },
 
     { path: '*', component: require('./components/NotFound.vue').default }
   ]
@@ -129,6 +130,11 @@ Vue.component(
 Vue.component(
     'not-found',
     require('./components/NotFound.vue').default
+);
+
+Vue.component(
+    'web-user',
+    require('./components/UserView.vue').default
 );
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);

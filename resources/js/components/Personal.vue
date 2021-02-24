@@ -1,60 +1,56 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="row mt-5" v-if="$gate.isAdminOrAuthor()">
-              <div class="col-md-12 mx-auto">
-                <div class="card border-0 bg-light mb-3 shadow-sm">
-                  <div class="card-header cyane">
-                    <h3 class="card-title"><b>LISTA DEL PERSONAL</b></h3>
-                    <div class="card-tools">
-                      <button class="btn btn-outline-primary" @click="newModal"><i class="fas fa-user-plus"></i> Nuevo Personal</button>
-                    </div>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body table-responsive p-0">
-                    <table class="table table-striped">
-                      <tbody>
-                      <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Datos</th>
-                        <th class="text-center">Cédula</th>
-                        <th class="text-center">Cargo</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Acciones</th>
-                      </tr>
-                      <tr v-for="(user, key, index)  in users.data" :key="user.id" >
-                        <td v-text="user.id"></td>
-                        <td>{{ user.name }}
-                          <small v-if="user.telefono"><b>Celular: </b></small> {{ user.telefono }}
-                          <small v-if="user.email"><b>E-mail: </b></small> {{ user.email }}
-                          <small v-if="user.bio"><b>Biografía: </b></small> {{ user.bio }}
-                        </td>
-                        <td v-text="user.cedula"></td>
-                        <td class="text-center">{{ user.cargo.nombre | upText }}</td>
-                        <td class="text-center"> {{ user.created_at | myDate }}</td>
-                        <td class="text-center ">
-                            <a href="#" @click="editModal(user)" class="btn btn-sm btn-outline-info">
-                                <i class="fas fa-edit blue">Editar</i>
-                            </a>
-                        </td>
-                      </tr>
-                    </tbody></table>
-                  </div>
-                  <!-- /.card-body -->
-                  <div class="card-footer cyane">
-                      <pagination :data="users" @pagination-change-page="getResults"></pagination>
-                  </div>
-                </div>
-                <!-- /.card -->
+      <div class="row mt-5" v-if="$gate.isAdminOrAuthor()">
+          <div class="card border-0 bg-light mb-3 shadow-sm">
+            <div class="card-header cyane">
+              <h3 class="card-title"><b>LISTA DEL PERSONAL</b></h3>
+              <div class="card-tools">
+                <button class="btn btn-outline-primary" @click="newModal"><i class="fas fa-user-plus"></i> Nuevo Personal</button>
               </div>
             </div>
-        </div>
+            <!-- /.card-header -->
+            <div class="card-body  p-0">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <tbody>
+                    <tr>
+                      <th class="text-center">ID</th>
+                      <th class="text-center">Datos</th>
+                      <th class="text-center">Cédula</th>
+                      <th class="text-center">Cargo</th>
+                      <th class="text-center">Fecha</th>
+                      <th class="text-center">Acciones</th>
+                    </tr>
+                    <tr v-for="(user, key, index)  in users.data" :key="user.id" >
+                      <td v-text="user.id"></td>
+                      <td>{{ user.name }}
+                        <small v-if="user.telefono"><b>Celular: </b></small> {{ user.telefono }}
+                        <small v-if="user.email"><b>E-mail: </b></small> {{ user.email }}
+                        <small v-if="user.bio"><b>Biografía: </b></small> {{ user.bio }}
+                      </td>
+                      <td v-text="user.cedula"></td>
+                      <td class="text-center">{{ user.cargo.nombre | upText }}</td>
+                      <td class="text-center"> {{ user.created_at | myDate }}</td>
+                      <td class="text-center ">
+                          <a href="#" @click="editModal(user)" class="btn btn-sm btn-outline-info">
+                              <i class="fas fa-edit blue">Editar</i>
+                          </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer cyane">
+                <pagination :data="users" @pagination-change-page="getResults"></pagination>
+            </div>
+          </div>
+      </div>
 
-
-    <div v-if="!$gate.isAdminOrAuthor()">
-        <not-found></not-found>
-    </div>
-
+      <div v-if="!$gate.isAdminOrAuthor()">
+          <not-found></not-found>
+      </div>
 
 <!-- Modal -->
 <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">

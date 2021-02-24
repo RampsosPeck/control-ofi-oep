@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="row mt-5" v-if="$gate.isAdminOrAuthor()">
+            <div class="row mt-5" v-if="$gate.isAdmin()"><!--v-if="$gate.isAdminOrAuthor()"-->
               <div class="col-md-12 mx-auto">
                 <div class="card border-0 bg-light mb-3 shadow-sm">
                   <div class="card-header cyane">
