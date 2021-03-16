@@ -50,7 +50,12 @@
               <img src="{{ asset('/img/useradmin.png') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info m-0">
-              <a href="#" class="d-block"> <b>{{ Auth::user()->name }}</b> <br><b>{{ Auth::user()->cargo->nombre }}</b></a>
+              @can('isAdmin')
+                <a href="#" class="d-block"> <b>{{ Auth::user()->name }}</b> <br><b>{{ Auth::user()->cargo->nombre }}</b></a>
+              @endcan
+              @can('isUser')
+                <a href="#" class="d-block"> <b>Mentrax User</b> <br><b>Registrador</b></a>
+              @endcan
             </div>
           </div>
 

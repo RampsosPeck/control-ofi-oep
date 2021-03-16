@@ -24,7 +24,7 @@ class RegistroController extends Controller
         if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor'))
         {
             //return User::orderBy('id','DESC')->paginate(10);
-            $registros = Registro::latest()->paginate(10);
+            $registros = Registro::latest()->get();
             return RegistroResource::collection($registros);
         }
     }
@@ -82,7 +82,7 @@ class RegistroController extends Controller
                         $registro->user_id = $request['userid'];
                         $registro->fecha   = Carbon::parse($request['fecha']);
                         $registro->horario_id = $request['horarioid'];
-                        $registro->llegadam   = Carbon::parse($request['hora']);
+                        $registro->llegadat   = Carbon::parse($request['hora']);
                         $registro->atraso2    = $request['atraso'];
                         $registro->save();
                         return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
@@ -246,7 +246,7 @@ class RegistroController extends Controller
                         $registro->user_id = $request['userid'];
                         $registro->fecha   = Carbon::parse($request['fecha']);
                         $registro->horario_id = $request['horarioid'];
-                        $registro->llegadam   = Carbon::parse($request['hora']);
+                        $registro->llegadat   = Carbon::parse($request['hora']);
                         $registro->save();
                         return response()->json(['message' => 'Registró su entrada en esta tarde con exitoso!'], 200);
                     }else{

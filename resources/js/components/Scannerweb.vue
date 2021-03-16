@@ -45,8 +45,12 @@
         </div><br /><br />
         <div class="row sidebar-dark-primary">
           <div class="hero" style="height:50vh;">
-              <h1>
-              <img src="img/qrscan5.png" width="150" class="my-4"></h1>
+              <h1> <small>CONTROL DE ASISTENCIA</small>
+                 <img src="img/qrscan5.png" width="150" class="my-4" style="margin-top: 0.2rem !important;">
+                 </h1>
+              <div class="row">
+                  <small class="footerleft">Created By  &copy;  Ing. Jorge Peralta </small>
+              </div>
               <div class="neon-light" style="width: 5px; height: 250px;">
               </div>
           </div>
